@@ -31,22 +31,21 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Sync Capacitor
+      # GitHub Actions ubuntu-latest already has the Android SDK pre-installed.
+      # Gradle will automatically detect $ANDROID_HOME.
+      - name: Sync Capacitor to Android
         run: npx cap sync android
 
       - name: Build Debug APK
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug --stacktrace
 
       - name: Build Release AAB (Google Play)
         run: |
           cd android
-          ./gradlew bundleRelease
+          ./gradlew bundleRelease --stacktrace
 
       - name: Upload Debug APK Artifact
         uses: actions/upload-artifact@v4
