@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Idle Miner</string>
+    <string name="title_activity_main">Idle Miner</string>
+    <string name="package_name">com.ceo3.idleminer</string>
+    <string name="custom_url_scheme">com.ceo3.idleminer</string>
+</resources>

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#0f111a" />
+    <title>Idle Miner Tycoon</title>
+  </head>
+  <body>
+    <div id="app">
+      <!-- Floating numbers & particle container -->
+      <div id="floating-container"></div>
+
+      <!-- App Header: Currencies, Multipliers, Settings -->
+      <header class="app-header">
+        <div class="currency-group">
+          <div class="currency-chip cash">
+            <span>💰</span>
+            <span id="cash-display">$0</span>
+          </div>
+          <div class="currency-chip gems">
+            <span>💎</span>
+            <span id="gems-display">15</span>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <button id="prestige-badge-btn" class="btn-prestige-badge">
+            ⭐ Prestige
+          </button>
+          <button id="boost-btn" class="btn-boost">
+            <span>⚡</span>
+            <span id="boost-timer">2x Boost</span>
+          </button>
+          <button id="settings-btn" class="btn-icon" aria-label="Settings">
+            ⚙️
+          </button>
+        </div>
+      </header>
+
+      <!-- TAB 1: MINE VIEW -->
+      <div class="tab-view active" id="tab-mine-view">
+        <!-- Surface Area with Animated Logistics -->
+        <div class="surface-area">
+          <!-- Flying Lucky Drone -->
+          <div id="flying-drone">
+            <span>🚁</span>
+            <span>Supply Crate!</span>
+          </div>
+
+          <!-- Warehouse Depot & Animated Truck -->
+          <div class="surface-card warehouse-card">
+            <div class="surface-title">
+              <span>🚚 Warehouse</span>
+              <span id="warehouse-level">Lv. 1</span>
+            </div>
+            <div class="surface-stat" id="warehouse-bin">Surface Ore: $0</div>
+            
+            <!-- Animated Truck Track -->
+            <div class="track-container">
+              <div class="truck-sprite" id="warehouse-truck">🚛</div>
+            </div>
+
+            <div class="surface-actions">
+              <button class="btn btn-tap" id="warehouse-tap-btn">Sell</button>
+              <button class="btn btn-upgrade" id="warehouse-upgrade-btn">
+                <span>Upg</span>
+                <span class="cost">$25</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Elevator Surface Tower & Animated Lift -->
+          <div class="surface-card elevator-card">
+            <div class="surface-title">
+              <span>🛗 Elevator</span>
+              <span id="elevator-level">Lv. 1</span>
+            </div>
+            <div class="surface-stat" id="elevator-load">Load: 0/25</div>
+
+            <!-- Animated Elevator Shaft Shaftway -->
+            <div class="track-container">
+              <div class="elevator-sprite" id="elevator-cabin">🚠</div>
+            </div>
+
+            <div class="surface-actions">
+              <button class="btn btn-tap" id="elevator-tap-btn">Collect</button>
+              <button class="btn btn-upgrade" id="elevator-upgrade-btn">
+                <span>Upg</span>
+                <span class="cost">$20</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Underground Shafts Scroll View -->
+        <main class="mine-scroll-view" id="shafts-list">
+          <!-- Dynamically populated -->
+        </main>
+      </div>
+
+      <!-- TAB 2: MANAGERS VIEW -->
+      <div class="tab-view" id="tab-managers-view">
+        <div class="tab-header">
+          <h2>👔 Automation Managers</h2>
+          <p>Hire foremen to keep miners, elevators, and trucks working 24/7!</p>
+        </div>
+        <div class="tab-scroll-content" id="managers-list-content">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <!-- TAB 3: RESEARCH / TECH LAB -->
+      <div class="tab-view" id="tab-research-view">
+        <div class="tab-header">
+          <h2>🧪 Research & Development</h2>
+          <p>Spend Super Gems 💎 for permanent boosts that survive prestiges!</p>
+        </div>
+        <div class="tab-scroll-content" id="research-list-content">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <!-- TAB 4: QUESTS / ACHIEVEMENTS -->
+      <div class="tab-view" id="tab-quests-view">
+        <div class="tab-header">
+          <h2>🏆 Missions & Quests</h2>
+          <p>Complete milestones to claim Super Gems 💎!</p>
+        </div>
+        <div class="tab-scroll-content" id="quests-list-content">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <!-- TAB 5: SHOP / ADMOB POWERUPS -->
+      <div class="tab-view" id="tab-shop-view">
+        <div class="tab-header">
+          <h2>🛒 Super Boost Shop</h2>
+          <p>Skip time, power up multipliers, and maximize your profits!</p>
+        </div>
+        <div class="tab-scroll-content shop-grid">
+          <!-- 1h Time Warp (AdMob Rewarded) -->
+          <div class="shop-card">
+            <div class="shop-badge ad-badge">FREE (AD)</div>
+            <div class="shop-icon">⏩</div>
+            <div class="shop-info">
+              <span class="shop-title">1-Hour Time Warp</span>
+              <span class="shop-desc">Instantly collect 1 hour of automated mining profits!</span>
+            </div>
+            <button class="btn btn-ad-double" id="warp-ad-btn">
+              🎬 Watch Ad
+            </button>
+          </div>
+
+          <!-- 4h Time Warp (Gems) -->
+          <div class="shop-card">
+            <div class="shop-icon">🚀</div>
+            <div class="shop-info">
+              <span class="shop-title">4-Hour Time Warp</span>
+              <span class="shop-desc">Fast-forward 4 full hours of production!</span>
+            </div>
+            <button class="btn btn-primary" id="warp-4h-btn">
+              20 💎
+            </button>
+          </div>
+
+          <!-- 24h Time Warp (Gems) -->
+          <div class="shop-card">
+            <div class="shop-badge best-badge">MEGA BOOST</div>
+            <div class="shop-icon">🌌</div>
+            <div class="shop-info">
+              <span class="shop-title">24-Hour Time Warp</span>
+              <span class="shop-desc">Massive instant payout equal to 1 entire day of mining!</span>
+            </div>
+            <button class="btn btn-primary" id="warp-24h-btn">
+              80 💎
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Nav Bar with 5 tabs -->
+      <nav class="bottom-nav">
+        <button class="nav-item active" data-tab="mine">
+          <span class="nav-item-icon">⛏️</span>
+          <span>Mine</span>
+        </button>
+        <button class="nav-item" data-tab="managers">
+          <span class="nav-item-icon">👔</span>
+          <span>Managers</span>
+        </button>
+        <button class="nav-item" data-tab="research">
+          <span class="nav-item-icon">🧪</span>
+          <span>Research</span>
+        </button>
+        <button class="nav-item" data-tab="quests">
+          <span class="nav-badge" id="quests-badge">0</span>
+          <span class="nav-item-icon">🏆</span>
+          <span>Quests</span>
+        </button>
+        <button class="nav-item" data-tab="shop">
+          <span class="nav-item-icon">🛒</span>
+          <span>Shop</span>
+        </button>
+      </nav>
+
+      <!-- MODAL: Prestige / Ascension -->
+      <div class="modal-overlay" id="prestige-modal">
+        <div class="modal-card">
+          <div class="modal-title">⭐ Sell Mine & Ascend</div>
+          <div class="modal-desc">
+            Reset your cash and shaft levels in exchange for powerful <strong>Super Gems 💎</strong> and a permanent multiplier!
+          </div>
+          <div class="modal-amount" id="prestige-reward-gems">+0 💎</div>
+          <div class="stat-highlight" id="prestige-mult-preview">+25% Permanent Multiplier</div>
+          <div class="modal-actions">
+            <button class="btn btn-ad-double" id="prestige-confirm-btn" disabled>
+              🌟 Confirm Ascension
+            </button>
+            <button class="btn btn-secondary" id="prestige-close-btn">
+              Keep Mining
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL: Settings & Statistics -->
+      <div class="modal-overlay" id="settings-modal">
+        <div class="modal-card">
+          <div class="modal-title">⚙️ Game Settings & Stats</div>
+          
+          <div class="stats-box">
+            <div class="stat-row">
+              <span>Lifetime Cash:</span>
+              <strong id="stat-total-cash">$0</strong>
+            </div>
+            <div class="stat-row">
+              <span>Total Taps:</span>
+              <strong id="stat-taps">0</strong>
+            </div>
+            <div class="stat-row">
+              <span>Times Ascended:</span>
+              <strong id="stat-prestiges">0</strong>
+            </div>
+            <div class="stat-row">
+              <span>Playtime:</span>
+              <strong id="stat-playtime">0 mins</strong>
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button class="btn btn-secondary" id="setting-mute-btn">
+              🔊 Audio: ON
+            </button>
+            <button class="btn btn-danger" id="setting-reset-btn">
+              ⚠️ Reset Save Data
+            </button>
+            <button class="btn btn-primary" id="settings-close-btn">
+              Back to Game
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL: Offline Earnings (Welcome Back) -->
+      <div class="modal-overlay" id="offline-modal">
+        <div class="modal-card">
+          <div class="modal-title">Welcome Back Miner! ⛏️</div>
+          <div class="modal-desc" id="offline-time-text">You were away for 20m</div>
+          <div class="modal-amount" id="offline-earned-text">$0</div>
+          <div class="modal-actions">
+            <button class="btn btn-ad-double" id="offline-double-btn">
+              🎬 Watch Ad for 2x
+            </button>
+            <button class="btn btn-secondary" id="offline-collect-btn">
+              Collect Regular
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL: Flying Drone Reward -->
+      <div class="modal-overlay" id="drone-modal">
+        <div class="modal-card">
+          <div class="modal-title">🚁 Lucky Supply Drone!</div>
+          <div class="modal-desc">The drone dropped a golden supply crate!</div>
+          <div class="modal-amount" id="drone-reward-preview">+$500 + 5 💎</div>
+          <div class="modal-actions">
+            <button class="btn btn-ad-double" id="drone-ad-btn">
+              🎬 Watch Ad to Open
+            </button>
+            <button class="btn btn-secondary" id="drone-close-btn">
+              Dismiss
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL: AdMob Web Mock Simulation -->
+      <div class="modal-overlay" id="ad-mock-modal">
+        <div class="modal-card">
+          <div class="modal-title">🎬 AdMob Video Ad</div>
+          <div class="modal-desc" id="ad-mock-title">Reward</div>
+          <div style="padding: 24px 0; font-size: 2.8rem;">📱✨</div>
+          <div style="font-weight: 700; color: var(--cyan); margin-bottom: 16px;" id="ad-mock-timer">
+            Ad playing... 3s
+          </div>
+          <button class="btn btn-primary" id="ad-mock-skip" disabled style="width: 100%;">
+            Wait for reward...
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
